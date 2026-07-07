@@ -20,10 +20,7 @@ class LocalStorageService {
       _savedWifiProfileKey,
       jsonEncode(savedProfile.toJson()),
     );
-    await prefs.setString(
-      _savedRouterPingKey,
-      jsonEncode(ping.toJson()),
-    );
+    await prefs.setString(_savedRouterPingKey, jsonEncode(ping.toJson()));
   }
 
   Future<WifiProfileModel?> getSavedWifiProfile() async {

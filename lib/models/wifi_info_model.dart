@@ -30,12 +30,12 @@ class WifiInfoModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'isConnected': isConnected,
-        'ssid': ssid,
-        'bssid': bssid,
-        'gatewayIp': gatewayIp,
-        'localIp': localIp,
-      };
+    'isConnected': isConnected,
+    'ssid': ssid,
+    'bssid': bssid,
+    'gatewayIp': gatewayIp,
+    'localIp': localIp,
+  };
 
   factory WifiInfoModel.fromJson(Map<String, dynamic> json) {
     return WifiInfoModel(
@@ -47,5 +47,6 @@ class WifiInfoModel {
     );
   }
 
-  factory WifiInfoModel.disconnected() => const WifiInfoModel(isConnected: false);
+  factory WifiInfoModel.disconnected() =>
+      const WifiInfoModel(isConnected: false);
 }

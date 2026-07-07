@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
 class WifiStatusBanner extends StatelessWidget {
-  const WifiStatusBanner({
-    super.key,
-    required this.isConnected,
-  });
+  const WifiStatusBanner({super.key, required this.isConnected});
 
   final bool isConnected;
 

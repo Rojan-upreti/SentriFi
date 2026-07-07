@@ -43,10 +43,13 @@ class PingUtil {
       final waitFlag = Platform.isIOS ? '-W' : '-W';
       final waitValue = Platform.isIOS ? '${timeout.inMilliseconds}' : '1';
 
-      final result = await Process.run(
-        'ping',
-        ['-c', '1', waitFlag, waitValue, host],
-      );
+      final result = await Process.run('ping', [
+        '-c',
+        '1',
+        waitFlag,
+        waitValue,
+        host,
+      ]);
 
       if (result.exitCode != 0) return null;
 

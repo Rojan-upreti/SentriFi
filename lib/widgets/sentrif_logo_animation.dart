@@ -92,7 +92,9 @@ class _SentrifLogoAnimationState extends State<SentrifLogoAnimation>
                     spreadRadius: 2,
                   ),
                   BoxShadow(
-                    color: AppColors.accent.withValues(alpha: glowOpacity * 0.5),
+                    color: AppColors.accent.withValues(
+                      alpha: glowOpacity * 0.5,
+                    ),
                     blurRadius: 60,
                     spreadRadius: -4,
                   ),

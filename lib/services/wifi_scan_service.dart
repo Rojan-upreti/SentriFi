@@ -14,15 +14,16 @@ class WifiScanService {
     Connectivity? connectivity,
     NetworkInfo? networkInfo,
     WifiStorageService? storageService,
-  })  : _connectivity = connectivity ?? Connectivity(),
-        _networkInfo = networkInfo ?? NetworkInfo(),
-        _storageService = storageService ?? WifiStorageService();
+  }) : _connectivity = connectivity ?? Connectivity(),
+       _networkInfo = networkInfo ?? NetworkInfo(),
+       _storageService = storageService ?? WifiStorageService();
 
   final Connectivity _connectivity;
   final NetworkInfo _networkInfo;
   final WifiStorageService _storageService;
 
-  Future<bool> requestPermissions() => PermissionHelper.requestWifiPermissions();
+  Future<bool> requestPermissions() =>
+      PermissionHelper.requestWifiPermissions();
 
   Future<bool> checkWifiConnection() async {
     final results = await _connectivity.checkConnectivity();
@@ -56,10 +57,7 @@ class WifiScanService {
     final pings = <PingResultModel>[];
 
     for (var i = 0; i < count; i++) {
-      final result = await PingUtil.pingHost(
-        gatewayIp,
-        sequence: i + 1,
-      );
+      final result = await PingUtil.pingHost(gatewayIp, sequence: i + 1);
       pings.add(result);
     }
 
@@ -72,7 +70,8 @@ class WifiScanService {
     double maxLatencyMs,
     double jitterMs,
     double packetLossPercent,
-  }) calculateBaseline(List<PingResultModel> pings) {
+  })
+  calculateBaseline(List<PingResultModel> pings) {
     return NetworkStatsUtil.calculateBaseline(pings);
   }
 

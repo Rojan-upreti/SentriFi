@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../screens/home_screen.dart';
 import '../screens/wifi_connect_screen.dart';
+import '../services/calibration_repository.dart';
 import '../theme/app_theme.dart';
 
 const _creamBackground = Color(0xFFF7F2EA);
@@ -16,14 +18,24 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _repository = CalibrationRepository();
+
   bool _showSplash = true;
+  bool _hasCalibration = false;
 
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(const Duration(milliseconds: 1700), () {
-      if (!mounted) return;
-      setState(() => _showSplash = false);
+    _prepareInitialView();
+  }
+
+  Future<void> _prepareInitialView() async {
+    await Future<void>.delayed(const Duration(milliseconds: 1700));
+    final profile = await _repository.getActiveProfile();
+    if (!mounted) return;
+    setState(() {
+      _hasCalibration = profile != null;
+      _showSplash = false;
     });
   }
 
@@ -40,11 +52,15 @@ class _LoginScreenState extends State<LoginScreen> {
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: AnimatedSwitcher(
-        duration: reduceMotion ? Duration.zero : const Duration(milliseconds: 520),
+        duration: reduceMotion
+            ? Duration.zero
+            : const Duration(milliseconds: 520),
         switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
         child: _showSplash
             ? const _SplashView(key: ValueKey('splash'))
+            : _hasCalibration
+            ? const HomeScreen(key: ValueKey('home'))
             : const _ConnectWifiView(key: ValueKey('connect')),
       ),
     );
@@ -72,9 +88,10 @@ class _SplashViewState extends State<_SplashView>
       duration: const Duration(milliseconds: 900),
     )..forward();
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _scale = Tween<double>(begin: 0.96, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-    );
+    _scale = Tween<double>(
+      begin: 0.96,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
   }
 
   @override
@@ -87,11 +104,7 @@ class _SplashViewState extends State<_SplashView>
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: _AnimatedSplashLogo(),
-        ),
-      ),
+      body: SafeArea(child: Center(child: _AnimatedSplashLogo())),
     );
   }
 }
@@ -141,9 +154,9 @@ class _ConnectWifiView extends StatelessWidget {
   const _ConnectWifiView({super.key});
 
   void _openWifiSetup(BuildContext context) {
-    Navigator.of(context).push(
-      CupertinoPageRoute<void>(builder: (_) => const WifiConnectScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(CupertinoPageRoute<void>(builder: (_) => const WifiConnectScreen()));
   }
 
   @override
@@ -200,11 +213,7 @@ class _ConnectWifiButton extends StatelessWidget {
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                CupertinoIcons.wifi,
-                color: Colors.white,
-                size: 21,
-              ),
+              Icon(CupertinoIcons.wifi, color: Colors.white, size: 21),
               SizedBox(width: 10),
               Text(
                 'Connect Wi-Fi',

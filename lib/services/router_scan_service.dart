@@ -5,18 +5,22 @@ import '../models/router_ping_model.dart';
 class RouterScanService {
   static const _pingCount = 10;
 
-  Future<RouterPingModel> pingGateway(String gatewayIp) async {
+  Future<RouterPingModel> pingGateway(
+    String gatewayIp, {
+    int count = _pingCount,
+  }) async {
     final trimmedGateway = gatewayIp.trim();
     if (trimmedGateway.isEmpty) {
       return _failedScan(
         gatewayIp: 'Unavailable',
+        sentPackets: count,
         errorMessage: 'Gateway IP is unavailable.',
       );
     }
 
     final latencies = <int>[];
 
-    for (var index = 0; index < _pingCount; index++) {
+    for (var index = 0; index < count; index++) {
       final latency = await _pingOnce(trimmedGateway);
       if (latency != null) {
         latencies.add(latency);
@@ -29,14 +33,14 @@ class RouterScanService {
 
     return RouterPingModel(
       gatewayIp: trimmedGateway,
-      sentPackets: _pingCount,
+      sentPackets: count,
       receivedPackets: latencies.length,
       latencies: latencies,
       averageLatency: calculateAverageLatency(latencies),
       minLatency: calculateMinLatency(latencies),
       maxLatency: calculateMaxLatency(latencies),
       jitter: calculateJitter(latencies),
-      packetLossPercentage: calculatePacketLoss(_pingCount, latencies.length),
+      packetLossPercentage: calculatePacketLoss(count, latencies.length),
       scannedAt: DateTime.now(),
       errorMessage: errorMessage,
     );
@@ -78,10 +82,13 @@ class RouterScanService {
     final stopwatch = Stopwatch()..start();
 
     try {
-      final result = await Process.run(
-        'ping',
-        ['-c', '1', '-W', Platform.isIOS ? '1000' : '1', host],
-      ).timeout(const Duration(seconds: 2));
+      final result = await Process.run('ping', [
+        '-c',
+        '1',
+        '-W',
+        Platform.isIOS ? '1000' : '1',
+        host,
+      ]).timeout(const Duration(seconds: 2));
 
       stopwatch.stop();
       if (result.exitCode != 0) return null;
@@ -101,11 +108,12 @@ class RouterScanService {
 
   RouterPingModel _failedScan({
     required String gatewayIp,
+    required int sentPackets,
     required String errorMessage,
   }) {
     return RouterPingModel(
       gatewayIp: gatewayIp,
-      sentPackets: _pingCount,
+      sentPackets: sentPackets,
       receivedPackets: 0,
       latencies: const [],
       averageLatency: 0,

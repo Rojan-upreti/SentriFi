@@ -4,11 +4,9 @@ import 'package:network_info_plus/network_info_plus.dart';
 import '../models/wifi_profile_model.dart';
 
 class WifiConnectionService {
-  WifiConnectionService({
-    Connectivity? connectivity,
-    NetworkInfo? networkInfo,
-  })  : _connectivity = connectivity ?? Connectivity(),
-        _networkInfo = networkInfo ?? NetworkInfo();
+  WifiConnectionService({Connectivity? connectivity, NetworkInfo? networkInfo})
+    : _connectivity = connectivity ?? Connectivity(),
+      _networkInfo = networkInfo ?? NetworkInfo();
 
   final Connectivity _connectivity;
   final NetworkInfo _networkInfo;
@@ -26,23 +24,16 @@ class WifiConnectionService {
       return WifiProfileModel.disconnected(connectionType: connectionType);
     }
 
-    try {
-      return WifiProfileModel(
-        isConnected: true,
-        connectionType: connectionType,
-        ssid: _sanitize(await _networkInfo.getWifiName()),
-        bssid: _sanitize(await _networkInfo.getWifiBSSID()),
-        gatewayIp: _sanitize(await _networkInfo.getWifiGatewayIP()),
-        localIp: _sanitize(await _networkInfo.getWifiIP()),
-        subnetMask: _sanitize(await _networkInfo.getWifiSubmask()),
-        broadcastAddress: _sanitize(await _networkInfo.getWifiBroadcast()),
-      );
-    } catch (_) {
-      return WifiProfileModel(
-        isConnected: true,
-        connectionType: connectionType,
-      );
-    }
+    return WifiProfileModel(
+      isConnected: true,
+      connectionType: connectionType,
+      ssid: await _readNetworkValue(_networkInfo.getWifiName),
+      bssid: await _readNetworkValue(_networkInfo.getWifiBSSID),
+      gatewayIp: await _readNetworkValue(_networkInfo.getWifiGatewayIP),
+      localIp: await _readNetworkValue(_networkInfo.getWifiIP),
+      subnetMask: await _readNetworkValue(_networkInfo.getWifiSubmask),
+      broadcastAddress: await _readNetworkValue(_networkInfo.getWifiBroadcast),
+    );
   }
 
   Stream<bool> watchWifiConnectionStatus() {
@@ -72,5 +63,13 @@ class WifiConnectionService {
     }
 
     return trimmed;
+  }
+
+  Future<String?> _readNetworkValue(Future<String?> Function() read) async {
+    try {
+      return _sanitize(await read());
+    } catch (_) {
+      return null;
+    }
   }
 }

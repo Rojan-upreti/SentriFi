@@ -16,7 +16,8 @@ class PingResultsCard extends StatelessWidget {
     double maxLatencyMs,
     double jitterMs,
     double packetLossPercent,
-  })? stats;
+  })?
+  stats;
 
   final bool isLoading;
 
@@ -59,9 +60,9 @@ class PingResultsCard extends StatelessWidget {
         children: [
           Text(
             'Ping Baseline',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 16),
           _MetricRow(
@@ -102,7 +103,9 @@ class _MetricRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: Theme.of(context).textTheme.bodyMedium)),
+          Expanded(
+            child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          ),
           Text(
             value,
             style: const TextStyle(

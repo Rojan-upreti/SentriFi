@@ -11,7 +11,8 @@ class NetworkStatsUtil {
     double maxLatencyMs,
     double jitterMs,
     double packetLossPercent,
-  }) calculateBaseline(List<PingResultModel> pings) {
+  })
+  calculateBaseline(List<PingResultModel> pings) {
     if (pings.isEmpty) {
       return (
         averageLatencyMs: 0,
@@ -39,8 +40,9 @@ class NetworkStatsUtil {
       );
     }
 
-    final latencies =
-        successful.map((ping) => ping.latencyMs!.toDouble()).toList();
+    final latencies = successful
+        .map((ping) => ping.latencyMs!.toDouble())
+        .toList();
 
     final averageLatencyMs =
         latencies.reduce((a, b) => a + b) / latencies.length;

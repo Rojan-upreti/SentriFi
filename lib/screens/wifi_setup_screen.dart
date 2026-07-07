@@ -97,7 +97,10 @@ class _WifiSetupScreenState extends State<WifiSetupScreen> {
 
     final gateway = _wifiInfo.gatewayIp;
     if (gateway == null || gateway.isEmpty) {
-      _showMessage('Gateway IP is unavailable for this network.', isError: true);
+      _showMessage(
+        'Gateway IP is unavailable for this network.',
+        isError: true,
+      );
       return;
     }
 
@@ -179,7 +182,9 @@ class _WifiSetupScreenState extends State<WifiSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final stats = _pings.isEmpty ? null : _wifiScanService.calculateBaseline(_pings);
+    final stats = _pings.isEmpty
+        ? null
+        : _wifiScanService.calculateBaseline(_pings);
 
     return Scaffold(
       appBar: AppBar(
@@ -189,7 +194,9 @@ class _WifiSetupScreenState extends State<WifiSetupScreen> {
         centerTitle: true,
       ),
       body: _isInitializing
-          ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            )
           : RefreshIndicator(
               color: AppColors.primary,
               onRefresh: _scanWifi,
@@ -244,10 +251,7 @@ class _WifiSetupScreenState extends State<WifiSetupScreen> {
 }
 
 class _PermissionNoteCard extends StatelessWidget {
-  const _PermissionNoteCard({
-    required this.granted,
-    required this.message,
-  });
+  const _PermissionNoteCard({required this.granted, required this.message});
 
   final bool granted;
   final String message;
@@ -274,7 +278,9 @@ class _PermissionNoteCard extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.4),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(height: 1.4),
             ),
           ),
         ],

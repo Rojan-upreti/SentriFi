@@ -24,17 +24,17 @@ class WifiBaselineModel {
   final DateTime setupTime;
 
   Map<String, dynamic> toJson() => {
-        'ssid': ssid,
-        'bssid': bssid,
-        'gatewayIp': gatewayIp,
-        'localIp': localIp,
-        'averageLatencyMs': averageLatencyMs,
-        'minLatencyMs': minLatencyMs,
-        'maxLatencyMs': maxLatencyMs,
-        'jitterMs': jitterMs,
-        'packetLossPercent': packetLossPercent,
-        'setupTime': setupTime.toIso8601String(),
-      };
+    'ssid': ssid,
+    'bssid': bssid,
+    'gatewayIp': gatewayIp,
+    'localIp': localIp,
+    'averageLatencyMs': averageLatencyMs,
+    'minLatencyMs': minLatencyMs,
+    'maxLatencyMs': maxLatencyMs,
+    'jitterMs': jitterMs,
+    'packetLossPercent': packetLossPercent,
+    'setupTime': setupTime.toIso8601String(),
+  };
 
   factory WifiBaselineModel.fromJson(Map<String, dynamic> json) {
     return WifiBaselineModel(

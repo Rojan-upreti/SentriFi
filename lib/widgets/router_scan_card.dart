@@ -103,14 +103,17 @@ class RouterScanCard extends StatelessWidget {
             label: isScanning ? 'Scanning Router' : 'Scan Router',
             icon: CupertinoIcons.waveform_path_ecg,
             isLoading: isScanning,
-            onPressed: canScan && !isScanning && !isSaving ? onScanRouter : null,
+            onPressed: canScan && !isScanning && !isSaving
+                ? onScanRouter
+                : null,
           ),
           const SizedBox(height: 12),
           _SecondaryButton(
             label: isSaving ? 'Saving...' : 'Use This Wi-Fi',
             isLoading: isSaving,
-            onPressed:
-                canUseWifi && !isScanning && !isSaving ? onUseThisWifi : null,
+            onPressed: canUseWifi && !isScanning && !isSaving
+                ? onUseThisWifi
+                : null,
           ),
         ],
       ),
@@ -129,10 +132,16 @@ class _MetricGrid extends StatelessWidget {
       spacing: 12,
       runSpacing: 12,
       children: [
-        _MetricTile(label: 'Average', value: '${ping.averageLatency.toStringAsFixed(1)} ms'),
+        _MetricTile(
+          label: 'Average',
+          value: '${ping.averageLatency.toStringAsFixed(1)} ms',
+        ),
         _MetricTile(label: 'Minimum', value: '${ping.minLatency} ms'),
         _MetricTile(label: 'Maximum', value: '${ping.maxLatency} ms'),
-        _MetricTile(label: 'Jitter', value: '${ping.jitter.toStringAsFixed(1)} ms'),
+        _MetricTile(
+          label: 'Jitter',
+          value: '${ping.jitter.toStringAsFixed(1)} ms',
+        ),
         _MetricTile(
           label: 'Packet Loss',
           value: '${ping.packetLossPercentage.toStringAsFixed(0)}%',

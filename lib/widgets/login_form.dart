@@ -42,9 +42,9 @@ class _LoginFormState extends State<LoginForm> {
     setState(() => _isLoading = false);
     if (!mounted) return;
 
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const WifiSetupScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const WifiSetupScreen()));
   }
 
   @override

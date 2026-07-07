@@ -144,11 +144,7 @@ class _AnimatedWifiIconState extends State<AnimatedWifiIcon>
           ),
           child: Transform.scale(
             scale: scale,
-            child: const Icon(
-              CupertinoIcons.wifi,
-              color: _appleInk,
-              size: 24,
-            ),
+            child: const Icon(CupertinoIcons.wifi, color: _appleInk, size: 24),
           ),
         );
       },

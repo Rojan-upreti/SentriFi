@@ -111,10 +111,7 @@ class _PrimaryButton extends StatelessWidget {
 }
 
 class _SecondaryButton extends StatelessWidget {
-  const _SecondaryButton({
-    required this.label,
-    required this.onPressed,
-  });
+  const _SecondaryButton({required this.label, required this.onPressed});
 
   final String label;
   final VoidCallback? onPressed;

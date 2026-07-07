@@ -53,16 +53,16 @@ class WifiProfileModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'isConnected': isConnected,
-        'connectionType': connectionType,
-        'ssid': ssid,
-        'bssid': bssid,
-        'gatewayIp': gatewayIp,
-        'localIp': localIp,
-        'subnetMask': subnetMask,
-        'broadcastAddress': broadcastAddress,
-        'savedAt': savedAt?.toIso8601String(),
-      };
+    'isConnected': isConnected,
+    'connectionType': connectionType,
+    'ssid': ssid,
+    'bssid': bssid,
+    'gatewayIp': gatewayIp,
+    'localIp': localIp,
+    'subnetMask': subnetMask,
+    'broadcastAddress': broadcastAddress,
+    'savedAt': savedAt?.toIso8601String(),
+  };
 
   factory WifiProfileModel.fromJson(Map<String, dynamic> json) {
     return WifiProfileModel(
@@ -81,10 +81,7 @@ class WifiProfileModel {
   }
 
   factory WifiProfileModel.disconnected({String connectionType = 'None'}) {
-    return WifiProfileModel(
-      isConnected: false,
-      connectionType: connectionType,
-    );
+    return WifiProfileModel(isConnected: false, connectionType: connectionType);
   }
 
   static String _display(String? value) {

@@ -19,9 +19,7 @@ class WifiStorageService {
     final raw = prefs.getString(StorageKeys.wifiBaseline);
     if (raw == null) return null;
 
-    return WifiBaselineModel.fromJson(
-      jsonDecode(raw) as Map<String, dynamic>,
-    );
+    return WifiBaselineModel.fromJson(jsonDecode(raw) as Map<String, dynamic>);
   }
 
   Future<void> clearBaseline() async {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,6 +13,7 @@ import '../services/wifi_permission_service.dart';
 import '../widgets/permission_card.dart';
 import '../widgets/router_scan_card.dart';
 import '../widgets/wifi_status_card.dart';
+import 'router_location_screen.dart';
 
 const _creamBackground = Color(0xFFF7F2EA);
 const _appleInk = Color(0xFF1D1D1F);
@@ -24,7 +26,8 @@ class WifiConnectScreen extends StatefulWidget {
   State<WifiConnectScreen> createState() => _WifiConnectScreenState();
 }
 
-class _WifiConnectScreenState extends State<WifiConnectScreen> {
+class _WifiConnectScreenState extends State<WifiConnectScreen>
+    with WidgetsBindingObserver {
   final _permissionService = WifiPermissionService();
   final _connectionService = WifiConnectionService();
   final _routerScanService = RouterScanService();
@@ -40,22 +43,32 @@ class _WifiConnectScreenState extends State<WifiConnectScreen> {
   bool _isScanning = false;
   bool _isSaving = false;
   String _statusMessage = 'Permission Required';
+  String? _lastAutoScannedNetworkKey;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _bootstrap();
-    _connectionSubscription =
-        _connectionService.watchWifiConnectionStatus().listen((_) {
-      if (!mounted || !_hasPermissions) return;
-      _refreshWifiStatus();
-    });
+    _connectionSubscription = _connectionService
+        .watchWifiConnectionStatus()
+        .listen((_) {
+          if (!mounted || !_hasPermissions) return;
+          _refreshWifiStatus();
+        });
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _connectionSubscription?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed || !_hasPermissions) return;
+    _refreshWifiStatus();
   }
 
   Future<void> _bootstrap() async {
@@ -65,7 +78,9 @@ class _WifiConnectScreenState extends State<WifiConnectScreen> {
 
     setState(() {
       _hasPermissions = hasPermissions;
-      _statusMessage = hasPermissions ? 'No Wi-Fi Connected' : 'Permission Required';
+      _statusMessage = hasPermissions
+          ? 'No Wi-Fi Connected'
+          : 'Permission Required';
     });
 
     if (hasPermissions) {
@@ -96,34 +111,46 @@ class _WifiConnectScreenState extends State<WifiConnectScreen> {
   Future<void> _refreshWifiStatus() async {
     setState(() {
       _isChecking = true;
-      _ping = null;
     });
 
     final profile = await _connectionService.getCurrentWifiProfile();
     if (!mounted) return;
 
     final isConnected = profile?.isConnected ?? false;
+    final networkKey = _networkKey(profile);
     setState(() {
       _profile = profile;
       _isChecking = false;
       _statusMessage = isConnected ? 'Wi-Fi Connected' : 'No Wi-Fi Connected';
+      if (!isConnected) {
+        _ping = null;
+        _lastAutoScannedNetworkKey = null;
+      } else if (networkKey != _lastAutoScannedNetworkKey) {
+        _ping = null;
+      }
     });
+
+    if (isConnected) {
+      await _autoScanConnectedRouter(profile);
+    }
   }
 
   Future<void> _openWifiSettings() async {
     await _permissionService.openWifiSettings();
+    _refreshWifiStatusAfterSettings();
   }
 
   Future<void> _openAppSettings() async {
     await _permissionService.openAppSettingsPage();
   }
 
-  Future<void> _scanRouter() async {
+  Future<void> _scanRouter({bool automatic = false}) async {
     final gatewayIp = _profile?.gatewayIp;
+    if (_isScanning) return;
 
     setState(() {
       _isScanning = true;
-      _statusMessage = 'Scanning Router';
+      _statusMessage = automatic ? 'Reading Router Details' : 'Scanning Router';
       _ping = null;
     });
 
@@ -134,6 +161,44 @@ class _WifiConnectScreenState extends State<WifiConnectScreen> {
       _ping = ping;
       _isScanning = false;
       _statusMessage = 'Router Scan Complete';
+    });
+  }
+
+  Future<void> _autoScanConnectedRouter(WifiProfileModel? profile) async {
+    if (!mounted || profile == null || !profile.isConnected || _isScanning) {
+      return;
+    }
+
+    final gatewayIp = profile.gatewayIp?.trim();
+    if (gatewayIp == null || gatewayIp.isEmpty) {
+      return;
+    }
+
+    final networkKey = _networkKey(profile);
+    if (networkKey == null) {
+      return;
+    }
+    if (_lastAutoScannedNetworkKey == networkKey) {
+      return;
+    }
+
+    _lastAutoScannedNetworkKey = networkKey;
+    await _scanRouter(automatic: true);
+  }
+
+  String? _networkKey(WifiProfileModel? profile) {
+    final gatewayIp = profile?.gatewayIp?.trim();
+    if (gatewayIp == null || gatewayIp.isEmpty) return null;
+    return '${profile?.ssid ?? 'unknown'}|$gatewayIp';
+  }
+
+  void _refreshWifiStatusAfterSettings() {
+    _refreshWifiStatus();
+    Future<void>.delayed(const Duration(seconds: 1), () {
+      if (mounted && _hasPermissions) _refreshWifiStatus();
+    });
+    Future<void>.delayed(const Duration(seconds: 3), () {
+      if (mounted && _hasPermissions) _refreshWifiStatus();
     });
   }
 
@@ -151,7 +216,9 @@ class _WifiConnectScreenState extends State<WifiConnectScreen> {
     if (!mounted) return;
 
     setState(() => _isSaving = false);
-    _showMessage('Wi-Fi connected and saved. SentriFi is ready to calibrate.');
+    Navigator.of(context).pushReplacement(
+      CupertinoPageRoute<void>(builder: (_) => const RouterLocationScreen()),
+    );
   }
 
   void _showMessage(String message) {

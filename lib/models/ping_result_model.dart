@@ -10,10 +10,10 @@ class PingResultModel {
   final int? latencyMs;
 
   Map<String, dynamic> toJson() => {
-        'sequence': sequence,
-        'success': success,
-        'latencyMs': latencyMs,
-      };
+    'sequence': sequence,
+    'success': success,
+    'latencyMs': latencyMs,
+  };
 
   factory PingResultModel.fromJson(Map<String, dynamic> json) {
     return PingResultModel(

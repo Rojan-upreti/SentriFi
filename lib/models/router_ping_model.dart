@@ -28,18 +28,18 @@ class RouterPingModel {
   bool get hasSuccessfulPing => receivedPackets > 0;
 
   Map<String, dynamic> toJson() => {
-        'gatewayIp': gatewayIp,
-        'sentPackets': sentPackets,
-        'receivedPackets': receivedPackets,
-        'latencies': latencies,
-        'averageLatency': averageLatency,
-        'minLatency': minLatency,
-        'maxLatency': maxLatency,
-        'jitter': jitter,
-        'packetLossPercentage': packetLossPercentage,
-        'scannedAt': scannedAt.toIso8601String(),
-        'errorMessage': errorMessage,
-      };
+    'gatewayIp': gatewayIp,
+    'sentPackets': sentPackets,
+    'receivedPackets': receivedPackets,
+    'latencies': latencies,
+    'averageLatency': averageLatency,
+    'minLatency': minLatency,
+    'maxLatency': maxLatency,
+    'jitter': jitter,
+    'packetLossPercentage': packetLossPercentage,
+    'scannedAt': scannedAt.toIso8601String(),
+    'errorMessage': errorMessage,
+  };
 
   factory RouterPingModel.fromJson(Map<String, dynamic> json) {
     return RouterPingModel(
@@ -53,9 +53,10 @@ class RouterPingModel {
       minLatency: (json['minLatency'] as num? ?? 0).round(),
       maxLatency: (json['maxLatency'] as num? ?? 0).round(),
       jitter: (json['jitter'] as num? ?? 0).toDouble(),
-      packetLossPercentage:
-          (json['packetLossPercentage'] as num? ?? 100).toDouble(),
-      scannedAt: DateTime.tryParse(json['scannedAt'] as String? ?? '') ??
+      packetLossPercentage: (json['packetLossPercentage'] as num? ?? 100)
+          .toDouble(),
+      scannedAt:
+          DateTime.tryParse(json['scannedAt'] as String? ?? '') ??
           DateTime.now(),
       errorMessage: json['errorMessage'] as String?,
     );

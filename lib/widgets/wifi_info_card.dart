@@ -4,10 +4,7 @@ import '../models/wifi_info_model.dart';
 import '../theme/app_theme.dart';
 
 class WifiInfoCard extends StatelessWidget {
-  const WifiInfoCard({
-    super.key,
-    required this.wifiInfo,
-  });
+  const WifiInfoCard({super.key, required this.wifiInfo});
 
   final WifiInfoModel wifiInfo;
 
@@ -26,9 +23,9 @@ class WifiInfoCard extends StatelessWidget {
         children: [
           Text(
             'Network Details',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 16),
           _InfoRow(label: 'SSID', value: wifiInfo.ssid ?? 'Unavailable'),
@@ -62,10 +59,7 @@ class _InfoRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 110,
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
           ),
           Expanded(
             child: Text(
