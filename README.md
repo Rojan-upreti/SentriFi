@@ -1,59 +1,101 @@
-# SentriFi
+# Sentrifi
 
-A cross-platform Flutter app for iOS and Android with a polished login experience and animated SENTRIFI branding.
+**Turn Your Wi-Fi Router Into a Home Security Alarm**
 
-## Features
+Sentrifi is a privacy-first mobile application that transforms an ordinary Wi-Fi router into a smart motion detection system. By analyzing wireless signal behavior and environmental patterns, Sentrifi can detect unusual movement around a monitored area without requiring cameras, sensors, or additional hardware.
 
-- **Animated SENTRIFI logo** — staggered letter reveal, shimmer gradient, and glow pulse
-- **Login screen** — email/password form with validation, frosted glass card, and dark fintech theme
-- **Wi-Fi setup screen** — connection status, SSID/BSSID/IP details, gateway ping baseline, and local persistence
-- **Mobile optimized** — safe areas, keyboard handling, autofill hints, and platform system UI styling
+## 🚀 Overview
 
-## Getting Started
+Sentrifi learns the normal wireless characteristics of a space and continuously monitors for signal disturbances that may indicate movement nearby.
 
-```bash
-flutter pub get
-flutter run
-```
+Whether you're monitoring an entryway, office, living room, or apartment, Sentrifi provides an affordable and accessible layer of home awareness using the Wi-Fi infrastructure you already own.
 
-### Run on a specific device
+## ✨ Features
 
-```bash
-# iOS Simulator
-flutter run -d ios
+* 📡 Wi-Fi signal calibration and baseline learning
+* 🏠 Assign custom router locations (Living Room, Bedroom, Office, etc.)
+* ⏱️ One-minute environment analysis during setup
+* 🧠 Local pattern recognition for signal fluctuations
+* 🚨 Motion and occupancy anomaly detection
+* 🔐 Privacy-first architecture
+* 💾 Local SQLite storage
+* 📱 Native Flutter experience for iOS and Android
+* 🎨 Interface inspired by Apple Human Interface Guidelines
 
-# Android Emulator / device
-flutter run -d android
-```
+## ⚙️ How It Works
 
-## Project Structure
+### 1. Connect
 
-```
-lib/
-├── main.dart
-├── models/
-│   ├── ping_result_model.dart
-│   ├── wifi_baseline_model.dart
-│   └── wifi_info_model.dart
-├── screens/
-│   ├── login_screen.dart
-│   └── wifi_setup_screen.dart
-├── services/
-│   ├── wifi_scan_service.dart
-│   └── wifi_storage_service.dart
-├── theme/
-│   └── app_theme.dart
-├── utils/
-│   ├── network_stats_util.dart
-│   ├── permission_helper.dart
-│   ├── ping_util.dart
-│   ├── settings_launcher.dart
-│   └── storage_keys.dart
-└── widgets/
-    ├── login_form.dart
-    ├── ping_results_card.dart
-    ├── sentrif_logo_animation.dart
-    ├── wifi_action_buttons.dart
-    ├── wifi_info_card.dart
-    └── wifi_status_banner.dart
-```
+Select the Wi-Fi network you want to monitor.
+
+### 2. Calibrate
+
+Sentrifi analyzes the wireless environment for 60 seconds to establish a baseline signal profile.
+
+During calibration, users are instructed to keep the monitored area still so the system can accurately learn normal network behavior.
+
+### 3. Store
+
+Calibration data is securely stored locally on the device using SQLite.
+
+### 4. Arm
+
+Tap the **ARM** button to begin monitoring.
+
+### 5. Detect
+
+Sentrifi continuously compares current network characteristics against the saved baseline.
+
+If significant deviations are detected, the app alerts the user with messages such as:
+
+> Possible movement detected near Living Room Router
+
+or
+
+> Suspected activity detected within the monitored area
+
+## 🏗️ Tech Stack
+
+* Flutter
+* Dart
+* SQLite
+* Connectivity Plus
+* Network Info Plus
+* Permission Handler
+* Shared Preferences
+
+## 🎯 Vision
+
+Traditional home security systems rely on cameras, subscriptions, or dedicated hardware.
+
+Sentrifi explores a different approach:
+
+**Using existing Wi-Fi infrastructure as a software-defined sensing layer for home awareness and occupancy detection.**
+
+Our goal is to make home monitoring more accessible, affordable, and privacy-conscious for everyone.
+
+## 📌 Current Status
+
+
+
+Future iterations may include:
+
+* Multi-router support
+* Push notifications
+* Historical activity timeline
+* Room-level calibration profiles
+* Machine learning–based anomaly detection
+* Cross-device synchronization
+* Smart home integrations
+
+## 🔒 Privacy
+
+Sentrifi is designed with a local-first philosophy.
+
+All calibration data, network profiles, and monitoring information remain stored on the user's device.
+
+
+
+---
+
+**Sentrifi — Turn Your Wi-Fi Into a Security System.**
